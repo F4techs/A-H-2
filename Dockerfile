@@ -9,4 +9,4 @@ RUN tree
 RUN pip install -r requirements.txt
 
 EXPOSE 8000
-CMD gunicorn domain:app & python3 __main__.py
+CMD gunicorn domain:app & python3 main.py
