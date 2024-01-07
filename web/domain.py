@@ -4,7 +4,7 @@ import random
 app = Flask(__name__)
 
 # List of quotes
-from . import quotes
+from quotes import quotes
 
 @app.route('/')
 def get_random_quote():
