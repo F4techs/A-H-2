@@ -11,4 +11,4 @@ RUN apt-get update && apt-get install -y tree
 RUN tree
 
 EXPOSE 8000
-CMD gunicorn ./web/domain:app & python3 main.py
+CMD ["gunicorn", "web.domain:app", "&", "python3", "web/main.py"]
