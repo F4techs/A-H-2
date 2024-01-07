@@ -1,9 +1,14 @@
+# only for render deployment: @nabilanavab
+
 FROM python:3.11
 
-COPY requirements.txt /app/
 WORKDIR /app
+COPY . /app
+
 RUN pip install -r requirements.txt
 
-COPY . /app/
+RUN apt-get update && apt-get install -y tree
+RUN tree
 
-CMD ["python", "main.py"]
+EXPOSE 8000
+CMD ["gunicorn", "web.domain:app", "&", "python3", "web/main.py"]
