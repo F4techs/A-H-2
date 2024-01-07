@@ -6,4 +6,8 @@ RUN pip install -r requirements.txt
 
 COPY . /app/
 
-CMD ["python", "main.py"]
+RUN apt-get install -y tree
+RUN tree
+
+EXPOSE 8000
+CMD gunicorn domain:app & python3 __main__.py
