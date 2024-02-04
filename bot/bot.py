@@ -1,22 +1,14 @@
-import typing
-
 from aiogram import Bot, Dispatcher
 from aiogram.filters import CommandStart, Command
 from aiogram.types import Message
 from aiogram.enums import ParseMode
 
 import config
-import openai_api
-from bot.filters import AllowedIdFilter
 
 bot = Bot(token=config.BOT_TOKEN, parse_mode=ParseMode.MARKDOWN)
 dp = Dispatcher()
 
-user_contexts: typing.Dict[int, openai_api.Model]
-user_contexts = dict()
-
-
-@dp.message(CommandStart(), AllowedIdFilter())
+@dp.message(CommandStart())
 async def start_respond(message: Message) -> None:
     """
     Handler for '/start' commands.
@@ -26,39 +18,25 @@ async def start_respond(message: Message) -> None:
     """
     await message.answer(config.START_PLACEHOLDER)
 
-
 @dp.message(Command('delete_context'))
 async def clear_context(message: Message) -> None:
     """
     Handler for '/delete_context' command.
-    Deletes the context of the conversation with user
+    Deletes the context of the conversation with the user
     :param message: message object
     :return: None
     """
     await message.answer(config.CLEAR_CONTEXT_ANSWER)
-    if message.from_user.id in user_contexts:
-        user_contexts.pop(message.from_user.id)
 
-
-@dp.message(AllowedIdFilter())
-async def query_respond(message: Message) -> None:
+@dp.message(Command('follow'))
+async def follow_command(message: Message) -> None:
     """
-    Handler for ordinary user request
-    Takes model with dialogue context, extends it and generates the answer.
-    :param message: new incoming query to add to context
+    Handler for '/follow' command.
+    Sends a custom reply message for the follow command.
+    :param message: message object
     :return: None
     """
-    response = await message.answer(config.PLACEHOLDER)
-    user_id = message.from_user.id
-
-    if user_id not in user_contexts:
-        user_contexts[user_id] = openai_api.Model()
-
-    query = message.text
-    answer = user_contexts[user_id].generate_answer(query)
-
-    await bot.edit_message_text(answer, response.chat.id, response.message_id)
-
+    await message.answer("Thank you for following! We appreciate your support.")
 
 async def main() -> None:
     """
